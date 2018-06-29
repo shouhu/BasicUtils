@@ -535,43 +535,7 @@ public class AndroidUtils {
     }
 
 
-    public static void switchLanguage(String language, Context mContext) {
-        //设置应用语言类型
-        Resources resources = mContext.getResources();
-        Configuration config = resources.getConfiguration();
-        DisplayMetrics dm = resources.getDisplayMetrics();
 
-        if (!TextUtils.isEmpty(language) && (language.equals(WalletConstants.LANG_CODE_ZH_TW) || language.equals(WalletConstants.LANG_CODE_ZH_HK_NEW))) // 繁体
-        {
-            config.locale = Locale.TRADITIONAL_CHINESE;
-        } else if (!TextUtils.isEmpty(language) && language.equals(WalletConstants.LANG_CODE_EN_US)) {
-            config.locale = Locale.ENGLISH;
-        } else if (!TextUtils.isEmpty(language) && language.equals(WalletConstants.LANG_CODE_ZH_CN)) {
-            config.locale = Locale.SIMPLIFIED_CHINESE;
-        } else { // 跟随系统
-            config.locale = Locale.getDefault(); //默认英文
-        }
-        LogUtils.i(TAG, "Locale.getDefault()-->" + Locale.getDefault());
-
-        if (!isEmptyOrNull(language)) {
-            SpUtils.getInstance(mContext).setAppLanguage(language);
-        } else {
-            Locale locale = mContext.getResources().getConfiguration().locale;
-            String lan = locale.getLanguage() + "-" + locale.getCountry();
-            LogUtils.i(TAG, "lan-->" + lan);//  zh-HK  en-HK   zh-CN   en-
-            if (lan.equalsIgnoreCase(WalletConstants.LANG_CODE_ZH_CN_NEW)) {
-                config.locale = Locale.SIMPLIFIED_CHINESE;
-            } else if (lan.equalsIgnoreCase(WalletConstants.LANG_CODE_ZH_HK_NEW) || lan.equalsIgnoreCase(WalletConstants.LANG_CODE_ZH_MO_NEW) || lan.equalsIgnoreCase(WalletConstants.LANG_CODE_ZH_TW_NEW)) {
-                LogUtils.i(TAG, "LANG_CODE_ZH_HK-->");
-                config.locale = Locale.TRADITIONAL_CHINESE;
-            } else {
-                config.locale = Locale.ENGLISH;
-            }
-            //设置系统语言为默认语言
-            SpUtils.getInstance(mContext).setAppLanguage(lan);
-        }
-        resources.updateConfiguration(config, dm);
-    }
 
     private static boolean isEmptyOrNull(String str) {
         return "".equals(str) || null == str || "null".equals(str);
@@ -982,63 +946,6 @@ public class AndroidUtils {
     }
 
 
-    public static void showErrorMsgDialog(Context mContext, String msg) {
-        if (mContext == null) return;
-        CustomMsgDialog.Builder builder = new CustomMsgDialog.Builder(mContext);
-        builder.setMessage(msg);
-        builder.setPositiveButton(mContext.getString(R.string.dialog_right_btn_cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        Activity mActivity = (Activity) mContext;
-        if (mActivity != null && !mActivity.isFinishing()) {
-            CustomMsgDialog mDealDialog = builder.create();
-            mDealDialog.setCancelable(false);
-            mDealDialog.show();
-        }
-    }
-
-    public static void showErrorMsgDialogAndLogin(final Activity mContext, String msg) {
-        if (mContext == null) return;
-        CustomMsgDialog.Builder builder = new CustomMsgDialog.Builder(mContext);
-        builder.setMessage(msg);
-        builder.setPositiveButton(mContext.getString(R.string.dialog_right_btn_cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                clearMemoryCache(mContext);
-                if (mContext instanceof LoginActivity){
-
-                }else {
-                    ProjectApp.removeAllTaskStackExcludeSplish();
-                    ActivitySkipUtil.startAnotherActivity(mContext, LoginActivity.class);
-                }
-            }
-        });
-        if (mContext != null && !mContext.isFinishing()) {
-            CustomMsgDialog mDealDialog = builder.create();
-            mDealDialog.setCancelable(false);
-            mDealDialog.show();
-        }
-    }
-
-    public static void showErrorMsgDialogAndResart(final Activity mContext, String msg) {
-        if (mContext == null) return;
-        CustomMsgDialog.Builder builder = new CustomMsgDialog.Builder(mContext);
-        builder.setMessage(msg);
-        builder.setPositiveButton(mContext.getString(R.string.dialog_right_btn_cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                clearMemoryCache(mContext);
-            }
-        });
-        if (mContext != null && !mContext.isFinishing()) {
-            CustomMsgDialog mDealDialog = builder.create();
-            mDealDialog.setCancelable(false);
-            mDealDialog.show();
-        }
-    }
 
 
     /**
